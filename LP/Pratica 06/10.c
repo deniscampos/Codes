@@ -11,6 +11,7 @@ void listar(char texto[1000][1000]) {
 	scanf("%d", &fim);
 
 	for(i = inicio; i <= fim; i++){
+		printf("%d -> ", i);
 		for(x = 0; texto[i][x] != '\0'; x++){
 			printf("%c", texto[i][x]);
 		}
@@ -24,11 +25,10 @@ void editar(char texto[1000][1000]) {
 	for(coluna = 0; texto[linha][coluna] != '\0'; coluna++){
 		printf("%c", texto[linha][coluna]);
 	}
-	printf("Conteúdo nova linha: ");
-	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O GET (funcionou)
-	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O GET (funcionou)
+	printf("\nConteúdo nova linha: ");
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O TEXTO (funcionou)
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O TEXTO (funcionou)
 	
-	printf("%s", novaLinha);
 	for(c = 0; novaLinha[c] != '\0'; c++){
 		texto[linha][c] = novaLinha[c];
 	}
@@ -36,7 +36,35 @@ void editar(char texto[1000][1000]) {
 	
 }
 
-void inserir(char texto[1000][1000]) {}
+void inserir(char texto[1000][1000], int * numLinhas) {
+	int coluna, linha, c, l;
+	char novaLinha[1000];
+	printf("\nAdicionar após linha: ");
+	scanf("%d", &linha);
+
+	printf(" --------  numLinhas: %d \n", * numLinhas);
+
+	printf("Conteúdo nova linha: ");
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O TEXTO (funcionou)
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O TEXTO (funcionou)
+	
+	//copia todo o texto após a nova linha para uma linha abaixo
+	for(l = * numLinhas + 1; l > linha + 1; l--){
+		for(c = 0; texto[l-1][c] != '\0'; c++){
+			texto[l][c] = texto[l-1][c];
+		}
+		texto[l][c] = '\0';
+	}
+
+	* numLinhas = * numLinhas + 1; //aumenta número de linhas
+
+	//adiciona novo texto na linha nova
+	for(c = 0; novaLinha[c] != '\0'; c++){
+		texto[linha + 1][c] = novaLinha[c];
+	}
+	texto[linha+1][c] = '\0';
+}
+
 void apagar(char texto[1000][1000]) {}
 void sairSalvar(char texto[1000][1000]) {}
 
@@ -58,7 +86,7 @@ int menu(){
 int main()
 {
 	FILE *arquivo;
-	int i, x, m;
+	int i, x, m, numLinhas;
 	char c, nome[100], linha[1000], texto[1000][1000];
 	
 	printf("Escreva o nome do arquivo de TEXTO que deseja ler.\nDEVE conter a extensão do arquivo e o mesmo DEVE estar na mesma pasta desse programa.\nNome arquivo: ");
@@ -79,7 +107,9 @@ int main()
 			printf("%c", texto[i][x]);
 		}
 	}
+	texto[i-1][x-1] = '\n';
 	printf("\n");
+	numLinhas = i-1;
 
 	while(m != 5 && m != 6){
 		m = menu();
@@ -91,7 +121,7 @@ int main()
 				editar(texto);
 				break;
 			case 3:
-				inserir(texto);
+				inserir(texto, &numLinhas);
 				break;
 			case 4:
 				apagar(texto);
