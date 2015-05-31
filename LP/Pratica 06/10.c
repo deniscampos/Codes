@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-void listar(char texto[100][100]) {
+void listar(char texto[1000][1000]) {
 	int inicio, fim, i, x;
 	printf("Linha inicial: ");
 	scanf("%d", &inicio);
@@ -16,11 +16,29 @@ void listar(char texto[100][100]) {
 		}
 	}
 }
-void editar(char texto[100][100]) {}
-void inserir(char texto[100][100]) {}
-void apagar(char texto[100][100]) {}
-void abandonar(char texto[100][100]) {}
-void sairSalvar(char texto[100][100]) {}
+void editar(char texto[1000][1000]) {
+	int coluna, linha, c;
+	char novaLinha[1000];
+	printf("Linha para editar: ");
+	scanf("%d", &linha);
+	for(coluna = 0; texto[linha][coluna] != '\0'; coluna++){
+		printf("%c", texto[linha][coluna]);
+	}
+	printf("Conteúdo nova linha: ");
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O GET (funcionou)
+	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O GET (funcionou)
+	
+	printf("%s", novaLinha);
+	for(c = 0; novaLinha[c] != '\0'; c++){
+		texto[linha][c] = novaLinha[c];
+	}
+	texto[linha][c] = '\0';
+	
+}
+
+void inserir(char texto[1000][1000]) {}
+void apagar(char texto[1000][1000]) {}
+void sairSalvar(char texto[1000][1000]) {}
 
 int menu(){
 	int menuUser;
@@ -34,7 +52,6 @@ int menu(){
 	printf("Escolha o que deseja fazer: ");
 
 	scanf("%d", &menuUser);
-
 	return(menuUser);
 }
 
@@ -42,7 +59,7 @@ int main()
 {
 	FILE *arquivo;
 	int i, x, m;
-	char c, nome[100], linha[100], texto[1000][100];
+	char c, nome[100], linha[1000], texto[1000][1000];
 	
 	printf("Escreva o nome do arquivo de TEXTO que deseja ler.\nDEVE conter a extensão do arquivo e o mesmo DEVE estar na mesma pasta desse programa.\nNome arquivo: ");
 	gets(nome);
@@ -52,8 +69,9 @@ int main()
 		printf("Erro!");
 		exit(1);
 	}
+
 	for(i = 0; !feof(arquivo); i++) {
-		fgets(linha, 100, arquivo);
+		fgets(linha, 1000, arquivo);
 		printf("%d -> ", i);
 
 		for(x = 0; linha[x] != '\0'; x++){
@@ -79,7 +97,6 @@ int main()
 				apagar(texto);
 				break;
 			case 5:
-				abandonar(texto);
 				break;
 			case 6:
 				sairSalvar(texto);
