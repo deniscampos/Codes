@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-void listar(char texto[1000][1000]) {
+// ----------------- EXIBIR TEXTO ----------------- //
+void listar(char texto[1000][1000], int numLinhas) {
 	int inicio, fim, i, x;
 	printf("Linha inicial: ");
 	scanf("%d", &inicio);
 	printf("Final: ");
 	scanf("%d", &fim);
+	while(fim > numLinhas){	
+		printf("O arquivo tem %d linhas.\n", numLinhas);
+		printf("Final: ");
+		scanf("%d", &fim);
+	}
 
 	for(i = inicio; i <= fim; i++){
 		printf("%d -> ", i);
@@ -17,11 +22,18 @@ void listar(char texto[1000][1000]) {
 		}
 	}
 }
-void editar(char texto[1000][1000]) {
+
+// ----------------- EDITAR LINHA ----------------- //
+void editar(char texto[1000][1000], int numLinhas) {
 	int coluna, linha, c;
 	char novaLinha[1000];
 	printf("Linha para editar: ");
 	scanf("%d", &linha);
+	while(linha > numLinhas){	
+		printf("O arquivo tem %d linhas.\n", numLinhas);
+		printf("Linha para editar: ");
+		scanf("%d", &linha);
+	}
 	for(coluna = 0; texto[linha][coluna] != '\0'; coluna++){
 		printf("%c", texto[linha][coluna]);
 	}
@@ -36,13 +48,17 @@ void editar(char texto[1000][1000]) {
 	
 }
 
+// ----------------- INSERIR LINHA ----------------- //
 void inserir(char texto[1000][1000], int * numLinhas) {
-	int coluna, linha, c, l;
+	int linha, c, l;
 	char novaLinha[1000];
 	printf("\nAdicionar após linha: ");
 	scanf("%d", &linha);
-
-	printf(" --------  numLinhas: %d \n", * numLinhas);
+	while(linha > * numLinhas){	
+		printf("O arquivo tem %d linhas.\n", * numLinhas);
+		printf("Adicionar após linha: ");
+		scanf("%d", &linha);
+	}
 
 	printf("Conteúdo nova linha: ");
 	fgets(novaLinha, sizeof(novaLinha), stdin); //2 fgets = GAMBIARRA PARA PEGAR O TEXTO (funcionou)
@@ -65,8 +81,31 @@ void inserir(char texto[1000][1000], int * numLinhas) {
 	texto[linha+1][c] = '\0';
 }
 
-void apagar(char texto[1000][1000]) {}
-void sairSalvar(char texto[1000][1000]) {}
+// ----------------- APAGAR LINHA ----------------- //
+void apagar(char texto[1000][1000], int * numLinhas) {
+	int linha, l, c;
+	printf("\nExcluir linha: ");
+	scanf("%d", &linha);
+	while(linha > * numLinhas){	
+		printf("O arquivo tem %d linhas.\n", * numLinhas);
+		printf("Excluir linha: ");
+		scanf("%d", &linha);
+	}
+
+	for(l = linha; l < * numLinhas; l++){
+		for(c = 0; texto[l+1][c] != '\0'; c++){
+			texto[l][c] = texto[l+1][c];
+		}
+		texto[l][c] = '\0';
+	}
+	texto[l][0] = '\0';
+	* numLinhas = * numLinhas - 1; //aumenta número de linhas
+}
+
+// ----------------- SALVAR NO ARQUIVO E SAIR ----------------- //
+void sairSalvar(char texto[1000][1000]) {
+
+}
 
 int menu(){
 	int menuUser;
@@ -115,16 +154,16 @@ int main()
 		m = menu();
 		switch(m){
 			case 1:
-				listar(texto);
+				listar(texto, numLinhas);
 				break;
 			case 2:
-				editar(texto);
+				editar(texto, numLinhas);
 				break;
 			case 3:
 				inserir(texto, &numLinhas);
 				break;
 			case 4:
-				apagar(texto);
+				apagar(texto, &numLinhas);
 				break;
 			case 5:
 				break;
