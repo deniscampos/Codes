@@ -103,10 +103,25 @@ void apagar(char texto[1000][1000], int * numLinhas) {
 }
 
 // ----------------- SALVAR NO ARQUIVO E SAIR ----------------- //
-void sairSalvar(char texto[1000][1000]) {
-
+void sairSalvar(char texto[1000][1000], char nome[100], int numLinhas) {
+	FILE *arquivo;
+	int linha, coluna;
+	if((arquivo = fopen(nome, "w")) == NULL)
+	{
+		printf("Erro!");
+		exit(1);
+	}
+	for(linha = 0; linha <= numLinhas; linha++){
+		for(coluna = 0; texto[linha][coluna] != '\0'; coluna++){
+			putc(texto[linha][coluna], arquivo);
+		}
+	}
+	putc('\0', arquivo);
+	fclose(arquivo);
 }
 
+
+// ----------------- EXIBIR MENU ----------------- //
 int menu(){
 	int menuUser;
 	printf("\n");
@@ -122,13 +137,16 @@ int menu(){
 	return(menuUser);
 }
 
+// ----------------- MAIN ----------------- //
 int main()
 {
 	FILE *arquivo;
-	int i, x, m, numLinhas;
+	int i, x, m, numLinhas, confimar = 0;
 	char c, nome[100], linha[1000], texto[1000][1000];
 	
-	printf("Escreva o nome do arquivo de TEXTO que deseja ler.\nDEVE conter a extensão do arquivo e o mesmo DEVE estar na mesma pasta desse programa.\nNome arquivo: ");
+	printf("Escreva o nome do arquivo de TEXTO que deseja ler.\n");
+	printf("DEVE conter a extensão do arquivo e o mesmo DEVE estar na mesma pasta desse programa.\n");
+	printf("Nome arquivo: ");
 	gets(nome);
 
 	if((arquivo = fopen(nome, "r")) == NULL)
@@ -149,8 +167,10 @@ int main()
 	texto[i-1][x-1] = '\n';
 	printf("\n");
 	numLinhas = i-1;
+	fclose(arquivo);
 
-	while(m != 5 && m != 6){
+	while(confimar != 1){
+		confimar = 0;
 		m = menu();
 		switch(m){
 			case 1:
@@ -166,9 +186,19 @@ int main()
 				apagar(texto, &numLinhas);
 				break;
 			case 5:
+				while(confimar != 1 && confimar != 2){
+					printf("Deseja realmente sair sem salvar? 1 = Sim, 2 = Não\n");
+					scanf("%d", &confimar);
+				}
 				break;
 			case 6:
-				sairSalvar(texto);
+				while(confimar != 1 && confimar != 2){
+					printf("Deseja realmente salvar e sair? 1 = Sim, 2 = Não\n");
+					scanf("%d", &confimar);
+				}
+				if(confimar == 1){
+					sairSalvar(texto, nome, numLinhas);
+				}
 				break;
 			default:
 				printf("Menu inválido\n");
@@ -176,7 +206,6 @@ int main()
 		}
 	}
 
-	fclose(arquivo);
 }
 
 /*Faça um editor de textos, inspirado no NotePad (Bloco de Notas) ou
