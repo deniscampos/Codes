@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <conio.h>
 
+FILE *p;
 
 struct endereco{
 	char rua[90];
@@ -38,17 +39,38 @@ struct dadosCadastro{
 struct dadosCadastro agenda[10];
 
 int busca_nome(){
+	char nome[50], nomeP[50];
 	int i;
 
+	if((p = fopen("agenda.txt", "r")) == NULL){
+		printf("Erro ao abrir arquivo!");
+		exit(1);
+	}	
 
+	gets(nome);
+
+	while(!feof(p)){
+
+		if (fgets(nomeP, 50, p) == nome)
+		{
+			printf("%s\n", nomeP);
+			
+		}
+	}
 }
+
 
 int main(){
 
 	int n, i;
-	FILE *p;
 
 	i = 0;
+
+	if((p = fopen("agenda.txt", "w+")) == NULL){
+		printf("Erro ao abrir arquivo!");
+		exit(1);
+	}
+	
 	do
 	{
 		printf("Escolha uma opção\n\n");
@@ -58,44 +80,71 @@ int main(){
 		if (n == 1)
 		{
 			fflush(stdin);
+
 			printf("\t_____Cadastrar_____\nNome: ");
 			gets(agenda[i].nome);
+			fprintf(p, "%s\n", agenda[i].nome);
 			fflush(stdin);
+
 			printf("E-mail: ");
 			gets(agenda[i].email);
+			fprintf(p, "%s\n", agenda[i].email);
 			fflush(stdin);
+
 			printf("\n_____Endereco_____\nRua: ");
 			gets(agenda[i].end.rua);
+			fprintf(p, "%s\n", agenda[i].end.rua);
 			fflush(stdin);
+
 			printf("Numero: ");
 			scanf("%d", &agenda[i].end.numero);
+			fprintf(p, "%d\n", agenda[i].end.numero);
 			fflush(stdin);
+
 			printf("Complemento: ");
 			gets(agenda[i].end.complemento);
+			fprintf(p, "%s\n", agenda[i].end.complemento);
 			fflush(stdin);
+
 			printf("Bairro: ");
 			gets(agenda[i].end.bairro);
+			fprintf(p, "%s\n", agenda[i].end.bairro);
 			fflush(stdin);
+
 			printf("CEP(apenas numeros): ");
 			scanf("%d", &agenda[i].end.cep);
+			fprintf(p, "%d\n", agenda[i].end.cep);
 			fflush(stdin);
+
 			printf("Cidade: ");
 			gets(agenda[i].end.cidade);
+			fprintf(p, "%s\n", agenda[i].end.cidade);
 			fflush(stdin);
+
 			printf("Estado: ");
 			gets(agenda[i].end.estado);
+			fprintf(p, "%s\n", agenda[i].end.estado);
 			fflush(stdin);
+
 			printf("Pais: ");
 			gets(agenda[i].end.pais);
+			fprintf(p, "%s\n", agenda[i].end.pais);
 			fflush(stdin);
+
 			printf("\n_____Data de Nascimento_____\nDia: ");
 			scanf("%d", &agenda[i].dtAn.dia);
+			fprintf(p, "%d\n", agenda[i].dtAn.dia);
 			fflush(stdin);
+
 			printf("Mes: ");
 			scanf("%d", &agenda[i].dtAn.mes);
+			fprintf(p, "%d\n", agenda[i].dtAn.mes);
 			fflush(stdin);
+
 			printf("Ano: ");
 			scanf("%d", &agenda[i].dtAn.ano);
+			fprintf(p, "%d\n", agenda[i].dtAn.ano);
+
 			printf("\n\n*** Cadastro concluido ***\n\n");
 			i++;
 		}
@@ -103,12 +152,15 @@ int main(){
 			printf("Opção inválida!\n");
 		}
 
+		if (n == 2)
+		{
+			fclose(p);
+			busca_nome();
+		}
+
 	}while(n != 3);
 
-	if((p = fopen("agenda.txt", "w")) == NULL){
-		printf("Erro ao abrir arquivo!");
-		exit(1);
-	}
+
 fclose(p);
 getch();
 }
